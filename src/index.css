@@ -1,0 +1,32 @@
+@import "./vendor/normalize.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "Roboto", Arial, sans-serif;
+  color: #1a1b22;
+  background-color: #ffffff;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+.page {
+  min-height: 100vh;
+}
