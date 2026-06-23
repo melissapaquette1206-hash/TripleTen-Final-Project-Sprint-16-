@@ -1,0 +1,46 @@
+.modal {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.3s ease;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal_opened {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal__container {
+  width: 430px;
+  background: white;
+  margin: 120px auto;
+  border-radius: 16px;
+  padding: 34px 36px;
+  position: relative;
+}
+
+.modal__close {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 40px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal__submit {
+  height: 64px;
+  border: none;
+  border-radius: 100px;
+  background: #2f71e5;
+  color: white;
+}

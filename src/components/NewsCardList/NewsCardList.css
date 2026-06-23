@@ -1,0 +1,10 @@
+.results {
+  padding: 80px 104px;
+  background: #f5f6f7;
+}
+
+.results__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}

@@ -1,0 +1,20 @@
+.search-form {
+  max-width: 608px;
+  margin: 64px auto 0;
+  display: flex;
+}
+
+.search-form__input {
+  flex: 1;
+  border: none;
+  padding: 21px 24px;
+  border-radius: 100px;
+}
+
+.search-form__button {
+  width: 168px;
+  border: none;
+  background: #2f71e5;
+  color: white;
+  border-radius: 100px;
+}

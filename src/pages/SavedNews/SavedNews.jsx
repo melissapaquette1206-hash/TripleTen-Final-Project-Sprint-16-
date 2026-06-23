@@ -1,8 +1,16 @@
-function SavedNews() {
+import NewsCardList from "../../components/NewsCardList/NewsCardList";
+
+function SavedNews({ savedArticles }) {
   return (
-    <main>
-      <h1>Saved News</h1>
-    </main>
+    <>
+      {" "}
+      <section className="saved-news-header">
+        {" "}
+        <h1>Saved Articles </h1>
+        <p>You have saved {savedArticles.length} articles</p>
+      </section>
+      <NewsCardList articles={savedArticles} />
+    </>
   );
 }
 
