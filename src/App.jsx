@@ -4,6 +4,9 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import SavedNews from "./pages/SavedNews/SavedNews";
 
+import LoginModal from "./components/LoginModal/LoginModal";
+import RegisterModal from "./components/RegisterModal/RegisterModal";
+
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 import CurrentUserContext from "./contexts/CurrentUserContext";

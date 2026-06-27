@@ -1,8 +1,8 @@
-const API_KEY = "YOUR_NEWS_API_KEY";
+const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
 class NewsApi {
   constructor() {
-    this._baseUrl = "https://nomoreparties.co/news/v2/everything";
+    this._baseUrl = "https://newsapi.org/v2/everything";
   }
 
   _checkResponse(res) {
@@ -10,9 +10,7 @@ class NewsApi {
       return Promise.reject(`Error: ${res.status}`);
     }
 
-    ```
-return res.json();
-```;
+    return res.json();
   }
 
   searchNews(keyword) {
@@ -21,12 +19,13 @@ return res.json();
     const weekAgo = new Date();
     weekAgo.setDate(today.getDate() - 7);
 
-    const from = weekAgo.toISOString();
-    const to = today.toISOString();
+    const from = weekAgo.toISOString().split("T")[0];
+
+    const to = today.toISOString().split("T")[0];
 
     return fetch(
       `${this._baseUrl}?q=${keyword}&from=${from}&to=${to}&pageSize=100&apiKey=${API_KEY}`,
-    ).then(this._checkResponse);
+    ).then((res) => this._checkResponse(res));
   }
 }
 
