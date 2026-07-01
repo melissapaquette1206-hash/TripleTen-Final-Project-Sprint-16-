@@ -28,5 +28,19 @@ a {
 }
 
 .page {
+  width: 100%;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    min-width: 320px;
+  }
 }

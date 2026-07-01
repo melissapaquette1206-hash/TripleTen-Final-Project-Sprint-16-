@@ -2,6 +2,7 @@
   background: white;
   border-radius: 16px;
   overflow: hidden;
+  width: 100%;
 }
 
 .card__image {
@@ -24,4 +25,21 @@
   color: white;
   padding: 10px 18px;
   border-radius: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  .card__image {
+    height: 180px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .card {
+    max-width: 288px;
+    margin: auto;
+  }
+
+  .card__image {
+    height: 196px;
+  }
 }

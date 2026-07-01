@@ -28,3 +28,31 @@
   border-radius: 100px;
   padding: 12px 24px;
 }
+
+@media screen and (max-width: 768px) {
+  .navigation {
+    padding: 20px 40px;
+  }
+
+  .navigation__links {
+    gap: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navigation {
+    padding: 16px;
+  }
+
+  .navigation__links {
+    display: none;
+  }
+
+  .navigation__menu {
+    display: block;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+  }
+}

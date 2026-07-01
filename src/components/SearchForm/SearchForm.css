@@ -18,3 +18,26 @@
   color: white;
   border-radius: 100px;
 }
+
+@media screen and (max-width: 768px) {
+  .search-form {
+    max-width: 452px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .search-form__input {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .search-form__button {
+    width: 100%;
+  }
+}

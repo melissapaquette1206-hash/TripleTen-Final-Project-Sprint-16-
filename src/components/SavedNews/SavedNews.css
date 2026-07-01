@@ -1,0 +1,20 @@
+.saved-news-header {
+  padding: 40px 104px;
+}
+
+@media screen and (max-width: 768px) {
+  .saved-news-header {
+    padding: 32px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .saved-news-header {
+    padding: 16px;
+  }
+
+  .saved-news-header h1 {
+    font-size: 30px;
+    line-height: 34px;
+  }
+}

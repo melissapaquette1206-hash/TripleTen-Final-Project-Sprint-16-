@@ -4,6 +4,10 @@
   background-size: cover;
   background-position: center;
   color: #fff;
+  width: 100%;
+  min-height: 576px;
+  background-size: cover;
+  background-position: center;
 }
 
 .header__overlay {
@@ -28,4 +32,45 @@
   margin-top: 32px;
   font-size: 18px;
   line-height: 24px;
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    min-height: 400px;
+  }
+
+  .header__content {
+    max-width: 452px;
+    margin: 40px auto;
+  }
+
+  .header__title {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  .header__subtitle {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header {
+    min-height: 536px;
+  }
+
+  .header__content {
+    padding: 16px;
+    margin-top: 30px;
+  }
+
+  .header__title {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  .header__subtitle {
+    margin-top: 16px;
+  }
 }

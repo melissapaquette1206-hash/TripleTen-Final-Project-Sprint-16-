@@ -1,0 +1,31 @@
+.about {
+  display: flex;
+  padding: 80px 104px;
+  align-items: center;
+  gap: 56px;
+}
+
+@media screen and (max-width: 768px) {
+  .about {
+    padding: 40px;
+    gap: 32px;
+  }
+
+  .about__image {
+    width: 232px;
+    height: 232px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .about {
+    flex-direction: column;
+    padding: 32px 16px;
+    text-align: center;
+  }
+
+  .about__image {
+    width: 272px;
+    height: 272px;
+  }
+}
