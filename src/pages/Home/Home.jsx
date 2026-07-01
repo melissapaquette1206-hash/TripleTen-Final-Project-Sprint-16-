@@ -8,15 +8,40 @@ import Footer from "../../components/Footer/Footer";
 
 import newsApi from "../../utils/NewsApi";
 
+const [articles, setArticles] = useState([]);
+const [isLoading, setIsLoading] = useState(false);
+const [hasSearched, setHasSearched] = useState(false);
+const [error, setError] = useState("");
+
 function Home() {
   const [articles, setArticles] = useState([]);
 
   const handleSearch = (keyword) => {
+    setIsLoading(true);
+    setError("");
+    setHasSearched(true);
+
     newsApi
       .searchNews(keyword)
       .then((data) => {
         setArticles(data.articles);
       })
+      .catch(() => {
+        setError("Sorry, something went wrong during the request.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleSaveArticle = (article) => {
+    mainApi
+      .saveArticle(article, token)
+
+      .then((savedArticle) => {
+        setSavedArticles((prev) => [...prev, savedArticle]);
+      })
+
       .catch(console.error);
   };
 
@@ -25,7 +50,12 @@ function Home() {
       {" "}
       <Header />
       <SearchForm onSearch={handleSearch} />
-      {articles.length > 0 && <NewsCardList articles={articles} />}
+      {isLoading && <Preloader />}
+      {error && <p className="search-error">{error}</p>}
+      {!isLoading && hasSearched && !articles.length && !error && <NoResults />}
+      {articles.length > 0 && (
+        <NewsCardList articles={articles} onSave={handleSaveArticle} />
+      )}
       <About />
       <Footer />
     </>

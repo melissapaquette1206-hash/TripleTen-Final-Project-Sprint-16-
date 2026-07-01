@@ -1,6 +1,6 @@
 import "./NewsCard.css";
 
-function NewsCard({ article }) {
+function NewsCard({ article, onSave, onDelete, isSaved }) {
   return (
     <article className="card">
       {" "}
@@ -18,9 +18,11 @@ function NewsCard({ article }) {
 
         <p className="card__source">{article.source?.name}</p>
 
-        <button className="card__save-button" type="button">
-          Save{" "}
-        </button>
+        <button
+          className="card__save-button"
+          type="button"
+          onClick={() => onSave(article)}
+        />
       </div>
     </article>
   );

@@ -122,6 +122,14 @@ function App() {
         onClose={closeRegister}
         onRegister={handleRegister}
       />
+      <Route
+        path="/saved-news"
+        element={
+          <ProtectedRoute loggedIn={loggedIn}>
+            <SavedNews />
+          </ProtectedRoute>
+        }
+      />
     </CurrentUserContext.Provider>
   );
 }
