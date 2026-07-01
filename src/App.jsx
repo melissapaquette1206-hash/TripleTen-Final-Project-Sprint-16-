@@ -3,33 +3,21 @@ import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home/Home";
 import SavedNews from "./pages/SavedNews/SavedNews";
-
 import LoginModal from "./components/LoginModal/LoginModal";
 import RegisterModal from "./components/RegisterModal/RegisterModal";
-
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-
 import CurrentUserContext from "./contexts/CurrentUserContext";
-
 import * as auth from "./utils/auth";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-
   const [currentUser, setCurrentUser] = useState({});
-
   const [savedArticles, setSavedArticles] = useState([]);
-
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-
   const openLogin = () => setIsLoginOpen(true);
-
   const closeLogin = () => setIsLoginOpen(false);
-
   const openRegister = () => setIsRegisterOpen(true);
-
   const closeRegister = () => setIsRegisterOpen(false);
 
   const handleLogin = ({ email, password }) => {
@@ -40,13 +28,12 @@ function App() {
       })
       .then((data) => {
         localStorage.setItem("jwt", data.token);
-
         setLoggedIn(true);
-
         return auth.getUserInfo(data.token);
       })
       .then(setCurrentUser)
       .catch(console.error);
+    closeLogin();
   };
 
   const handleRegister = (userData) => {
@@ -61,15 +48,12 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
-
     setLoggedIn(false);
-
     setCurrentUser({});
   };
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
-
     if (!token) {
       return;
     }
@@ -78,6 +62,10 @@ function App() {
       .getUserInfo(token)
       .then((user) => {
         setCurrentUser(user);
+        mainApi
+          .getSavedArticles(token)
+          .then(setSavedArticles)
+          .catch(console.error);
         setLoggedIn(true);
       })
       .catch(console.error);

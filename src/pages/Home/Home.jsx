@@ -5,16 +5,20 @@ import SearchForm from "../../components/SearchForm/SearchForm";
 import NewsCardList from "../../components/NewsCardList/NewsCardList";
 import About from "../../components/About/About";
 import Footer from "../../components/Footer/Footer";
+import Preloader from "../../components/Preloader/Preloader";
+import NoResults from "../../components/NoResults/NoResults";
+import mainApi from "../../utils/MainApi";
 
 import newsApi from "../../utils/NewsApi";
 
-const [articles, setArticles] = useState([]);
-const [isLoading, setIsLoading] = useState(false);
-const [hasSearched, setHasSearched] = useState(false);
-const [error, setError] = useState("");
-
-function Home() {
+function Home({ savedArticles, setSavedArticles }) {
   const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [error, setError] = useState("");
+  const [articles, setArticles] = useState([]);
+
+  const token = localStorage.getItem("jwt");
 
   const handleSearch = (keyword) => {
     setIsLoading(true);
@@ -25,6 +29,14 @@ function Home() {
       .searchNews(keyword)
       .then((data) => {
         setArticles(data.articles);
+        localStorage.setItem("searchResults", JSON.stringify(data.articles));
+        useEffect(() => {
+          const saved = localStorage.getItem("searchResults");
+
+          if (saved) {
+            setArticles(JSON.parse(saved));
+          }
+        }, []);
       })
       .catch(() => {
         setError("Sorry, something went wrong during the request.");
@@ -37,11 +49,9 @@ function Home() {
   const handleSaveArticle = (article) => {
     mainApi
       .saveArticle(article, token)
-
       .then((savedArticle) => {
         setSavedArticles((prev) => [...prev, savedArticle]);
       })
-
       .catch(console.error);
   };
 
