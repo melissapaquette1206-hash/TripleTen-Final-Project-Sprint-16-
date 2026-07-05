@@ -8,7 +8,12 @@ function NewsCardList({ articles }) {
       <h2 className="results__title">Search Results </h2>
       <div className="results__grid">
         {articles.map((article) => (
-          <NewsCard key={article.url} article={article} />
+          <NewsCard
+            key={article.url}
+            article={article}
+            onSave={onSave}
+            onDelete={onDelete}
+          />
         ))}
       </div>
     </section>

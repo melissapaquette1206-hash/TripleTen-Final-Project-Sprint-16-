@@ -21,7 +21,14 @@ function NewsCard({ article, onSave, onDelete, isSaved }) {
         <button
           className="card__save-button"
           type="button"
-          onClick={() => onSave(article)}
+          aria-label="Save article"
+          onClick={() => {
+            if (isSaved) {
+              onDelete(article._id);
+            } else {
+              onSave(article);
+            }
+          }}
         />
       </div>
     </article>

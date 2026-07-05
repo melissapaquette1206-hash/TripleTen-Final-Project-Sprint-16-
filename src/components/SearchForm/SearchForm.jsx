@@ -21,7 +21,9 @@ function SearchForm({ onSearch }) {
         required
       />
       ```
-      <button className="search-form__button">Search</button>
+      <button type="submit" className="search-form__button">
+        Search
+      </button>
     </form>
   );
 }

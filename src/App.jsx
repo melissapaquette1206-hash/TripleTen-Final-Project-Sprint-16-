@@ -8,6 +8,7 @@ import RegisterModal from "./components/RegisterModal/RegisterModal";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import CurrentUserContext from "./contexts/CurrentUserContext";
 import * as auth from "./utils/auth";
+import mainApi from "./utils/MainApi";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -62,10 +63,11 @@ function App() {
       .getUserInfo(token)
       .then((user) => {
         setCurrentUser(user);
-        mainApi
-          .getSavedArticles(token)
-          .then(setSavedArticles)
-          .catch(console.error);
+        closeLogin();
+        return mainApi.getSavedArticles(token);
+      })
+      .then((articles) => {
+        setSavedArticles(articles);
         setLoggedIn(true);
       })
       .catch(console.error);

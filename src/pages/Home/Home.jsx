@@ -11,7 +11,13 @@ import mainApi from "../../utils/MainApi";
 
 import newsApi from "../../utils/NewsApi";
 
-function Home({ savedArticles, setSavedArticles }) {
+function Home({
+  loggedIn,
+  savedArticles,
+  setSavedArticles,
+  onLoginClick,
+  onLogout,
+}) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
@@ -57,7 +63,16 @@ function Home({ savedArticles, setSavedArticles }) {
   return (
     <>
       {" "}
-      <Header />
+      <Header
+        loggedIn={loggedIn}
+        onLoginClick={onLoginClick}
+        onLogout={onLogout}
+      />
+      <Navigation
+        loggedIn={loggedIn}
+        onLoginClick={onLoginClick}
+        onLogout={onLogout}
+      />
       <SearchForm onSearch={handleSearch} />
       {isLoading && <Preloader />}
       {error && <p className="search-error">{error}</p>}

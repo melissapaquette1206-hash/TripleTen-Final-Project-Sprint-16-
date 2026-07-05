@@ -24,6 +24,24 @@ function Navigation({ loggedIn, onLoginClick }) {
             Sign In
           </button>
         )}
+
+        {loggedIn ? (
+          <button
+            type="button"
+            onClick={onLogout}
+            className="navigation__button"
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onLoginClick}
+            className="navigation__button"
+          >
+            Sign In
+          </button>
+        )}
       </div>
     </nav>
   );
