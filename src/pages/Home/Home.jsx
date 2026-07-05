@@ -17,17 +17,16 @@ function Home({ savedArticles, setSavedArticles }) {
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    const saved = localStorage.getItem("searchResults");
+
+    if (saved) {
+      setArticles(JSON.parse(saved));
+    }
+  }, []);
   const token = localStorage.getItem("jwt");
 
   const handleSearch = (keyword) => {
-    useEffect(() => {
-      const saved = localStorage.getItem("searchResults");
-
-      if (saved) {
-        setArticles(JSON.parse(saved));
-      }
-    }, []);
-
     setIsLoading(true);
     setError("");
     setHasSearched(true);
