@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "./Navigation.css";
 
-function Navigation({ loggedIn, onLoginClick }) {
+function Navigation({ loggedIn, onLoginClick, onLogout }) {
   return (
     <nav className="navigation">
       {" "}
@@ -17,12 +17,6 @@ function Navigation({ loggedIn, onLoginClick }) {
           <Link to="/saved-news" className="navigation__link">
             Saved Articles
           </Link>
-        )}
-
-        {!loggedIn && (
-          <button className="navigation__button" onClick={onLoginClick}>
-            Sign In
-          </button>
         )}
 
         {loggedIn ? (
