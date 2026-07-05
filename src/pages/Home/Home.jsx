@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Header from "../../components/Header/Header";
 import SearchForm from "../../components/SearchForm/SearchForm";
@@ -16,11 +16,18 @@ function Home({ savedArticles, setSavedArticles }) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState("");
-  const [articles, setArticles] = useState([]);
 
   const token = localStorage.getItem("jwt");
 
   const handleSearch = (keyword) => {
+    useEffect(() => {
+      const saved = localStorage.getItem("searchResults");
+
+      if (saved) {
+        setArticles(JSON.parse(saved));
+      }
+    }, []);
+
     setIsLoading(true);
     setError("");
     setHasSearched(true);
@@ -30,13 +37,6 @@ function Home({ savedArticles, setSavedArticles }) {
       .then((data) => {
         setArticles(data.articles);
         localStorage.setItem("searchResults", JSON.stringify(data.articles));
-        useEffect(() => {
-          const saved = localStorage.getItem("searchResults");
-
-          if (saved) {
-            setArticles(JSON.parse(saved));
-          }
-        }, []);
       })
       .catch(() => {
         setError("Sorry, something went wrong during the request.");
