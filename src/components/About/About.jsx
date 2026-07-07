@@ -1,6 +1,6 @@
 import "./About.css";
 import React from "react";
-import authorPic from "../../images/INSERTPICHERE";
+import authorPic from "../../images/MelissaPaquette.png";
 
 function About() {
   return (
