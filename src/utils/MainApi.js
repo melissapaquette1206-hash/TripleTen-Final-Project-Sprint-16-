@@ -1,73 +1,95 @@
+const SAVED_ARTICLES_KEY = "newsExplorerSavedArticles";
+
 class MainApi {
-  constructor({ baseUrl }) {
-    this._baseUrl = baseUrl;
-  }
-
-  _checkResponse(res) {
-    if (!res.ok) {
-      return res
-        .json()
-        .catch(() => ({}))
-        .then((errorData) => {
-          const message =
-            errorData.message || `Request failed with status ${res.status}`;
-
-          return Promise.reject(new Error(message));
-        });
+  _getSavedArticles() {
+    try {
+      return JSON.parse(localStorage.getItem(SAVED_ARTICLES_KEY)) || [];
+    } catch {
+      return [];
     }
+  }
 
-    if (res.status === 204) {
-      return Promise.resolve(null);
+  _validateToken(token) {
+    const storedToken = localStorage.getItem("jwt");
+
+    if (!token || token !== storedToken) {
+      throw new Error("Invalid token.");
     }
-
-    return res.json();
-  }
-
-  _request(url, options = {}) {
-    return fetch(url, options).then((res) => this._checkResponse(res));
-  }
-
-  getUserInfo(token) {
-    return this._request(`${this._baseUrl}/users/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
   }
 
   getSavedArticles(token) {
-    return this._request(`${this._baseUrl}/articles`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          this._validateToken(token);
+          resolve(this._getSavedArticles());
+        } catch (err) {
+          reject(err);
+        }
+      }, 300);
     });
   }
 
   saveArticle(article, token) {
-    return this._request(`${this._baseUrl}/articles`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(article),
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          this._validateToken(token);
+
+          const savedArticles = this._getSavedArticles();
+
+          const alreadySaved = savedArticles.some(
+            (item) => item.link === article.link,
+          );
+
+          if (alreadySaved) {
+            reject(new Error("This article has already been saved."));
+            return;
+          }
+
+          const savedArticle = {
+            ...article,
+            _id: crypto.randomUUID(),
+          };
+
+          localStorage.setItem(
+            SAVED_ARTICLES_KEY,
+            JSON.stringify([...savedArticles, savedArticle]),
+          );
+
+          resolve(savedArticle);
+        } catch (err) {
+          reject(err);
+        }
+      }, 300);
     });
   }
 
   deleteArticle(articleId, token) {
-    return this._request(`${this._baseUrl}/articles/${articleId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          this._validateToken(token);
+
+          const savedArticles = this._getSavedArticles();
+          const updatedArticles = savedArticles.filter(
+            (article) => article._id !== articleId,
+          );
+
+          localStorage.setItem(
+            SAVED_ARTICLES_KEY,
+            JSON.stringify(updatedArticles),
+          );
+
+          resolve({ message: "Article deleted." });
+        } catch (err) {
+          reject(err);
+        }
+      }, 300);
     });
   }
 }
 
-const mainApi = new MainApi({
-  baseUrl: import.meta.env.VITE_MAIN_API_URL || "http://localhost:3001",
-});
+const mainApi = new MainApi();
 
 export default mainApi;

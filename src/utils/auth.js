@@ -1,57 +1,99 @@
-const BASE_URL = import.meta.env.VITE_MAIN_API_URL || "http://localhost:3001";
+const USERS_KEY = "newsExplorerUsers";
+const TOKEN_KEY = "jwt";
+const CURRENT_USER_KEY = "newsExplorerCurrentUser";
 
-const checkResponse = (res) => {
-  if (res.ok) {
-    return res.json();
+const createMockToken = (email) => {
+  return `mock-token-${btoa(email)}`;
+};
+
+const getStoredUsers = () => {
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+  } catch {
+    return [];
   }
-
-  return res
-    .json()
-    .catch(() => ({}))
-    .then((errorData) => {
-      const message =
-        errorData.message || `Request failed with status ${res.status}`;
-
-      return Promise.reject(new Error(message));
-    });
 };
 
 export const register = ({ name, email, password }) => {
-  return fetch(`${BASE_URL}/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: name.trim(),
-      email: email.trim(),
-      password,
-    }),
-  }).then(checkResponse);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const users = getStoredUsers();
+      const normalizedEmail = email.trim().toLowerCase();
+
+      const userAlreadyExists = users.some(
+        (user) => user.email === normalizedEmail,
+      );
+
+      if (userAlreadyExists) {
+        reject(new Error("A user with this email already exists."));
+        return;
+      }
+
+      const newUser = {
+        id: crypto.randomUUID(),
+        name: name.trim(),
+        email: normalizedEmail,
+        password,
+      };
+
+      localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]));
+
+      resolve({
+        name: newUser.name,
+        email: newUser.email,
+      });
+    }, 500);
+  });
 };
 
 export const authorize = ({ email, password }) => {
-  return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email.trim(),
-      password,
-    }),
-  }).then(checkResponse);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const users = getStoredUsers();
+      const normalizedEmail = email.trim().toLowerCase();
+
+      const user = users.find(
+        (item) => item.email === normalizedEmail && item.password === password,
+      );
+
+      if (!user) {
+        reject(new Error("Incorrect email or password."));
+        return;
+      }
+
+      const token = createMockToken(user.email);
+
+      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(
+        CURRENT_USER_KEY,
+        JSON.stringify({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        }),
+      );
+
+      resolve({ token });
+    }, 500);
+  });
 };
 
 export const getUserInfo = (token) => {
-  if (!token) {
-    return Promise.reject(new Error("Authentication token is missing."));
-  }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const storedToken = localStorage.getItem(TOKEN_KEY);
+      const currentUser = localStorage.getItem(CURRENT_USER_KEY);
 
-  return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then(checkResponse);
+      if (!token || token !== storedToken || !currentUser) {
+        reject(new Error("Invalid token."));
+        return;
+      }
+
+      try {
+        resolve(JSON.parse(currentUser));
+      } catch {
+        reject(new Error("Could not restore user information."));
+      }
+    }, 300);
+  });
 };

@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header";
 import Main from "../../components/Main/Main";
 import newsApi from "../../utils/NewsApi";
 import mainApi from "../../utils/MainApi";
+import Footer from "../../components/Footer/Footer";
 
 function Home({
   loggedIn,
@@ -167,6 +168,8 @@ function Home({
         loggedIn={loggedIn}
         onLoginClick={onLoginClick}
       />
+
+      <Footer />
     </>
   );
 }

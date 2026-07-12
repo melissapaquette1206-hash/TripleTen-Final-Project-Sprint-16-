@@ -77,6 +77,8 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
+    localStorage.removeItem("newsExplorerCurrentUser");
+
     setLoggedIn(false);
     setCurrentUser({});
     setSavedArticles([]);
