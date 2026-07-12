@@ -26,6 +26,10 @@
   gap: 16px;
 }
 
+.results_type_saved-news {
+  padding-top: 62px;
+}
+
 .results__show-more {
   display: block;
   width: 288px;

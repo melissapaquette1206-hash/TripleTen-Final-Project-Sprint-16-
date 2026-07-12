@@ -1,68 +1,213 @@
 .navigation {
+  position: relative;
+  z-index: 20;
   display: flex;
-  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 80px;
+  padding: 0 104px;
   align-items: center;
-  padding: 30px 104px 26px;
+  justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .navigation__logo {
-  color: white;
-  font-weight: 700;
+  color: #fff;
+  font-family: "Roboto Slab", Georgia, serif;
   font-size: 20px;
-  font-family: "Roboto Slab";
+  font-weight: 700;
+  line-height: 24px;
+  text-decoration: none;
 }
 
 .navigation__links {
   display: flex;
+  height: 100%;
   align-items: center;
   gap: 32px;
-  text-decoration: none;
-  font-weight: 500;
 }
 
 .navigation__link {
-  color: white;
+  position: relative;
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-decoration: none;
+}
+
+.navigation__link::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  background-color: transparent;
+  content: "";
+}
+
+.navigation__link_active::after {
+  background-color: #fff;
 }
 
 .navigation__button {
-  color: white;
-  background: transparent;
-  border: 1px solid white;
+  display: flex;
+  min-height: 48px;
+  padding: 0 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #fff;
   border-radius: 100px;
-  padding: 12px 24px;
+  background-color: transparent;
+  color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: opacity 0.2s ease;
 }
 
 .navigation__button:hover {
   opacity: 0.7;
 }
 
+.navigation__button:focus-visible,
+.navigation__link:focus-visible,
+.navigation__logo:focus-visible,
+.navigation__menu:focus-visible {
+  outline: 2px solid #2f71e5;
+  outline-offset: 3px;
+}
+
+.navigation__logout-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.navigation__menu {
+  display: none;
+}
+
+/* Saved Articles navigation */
+
+.navigation_type_saved-news {
+  border-bottom-color: #d1d2d6;
+  background-color: #fff;
+}
+
+.navigation_type_saved-news .navigation__logo,
+.navigation_type_saved-news .navigation__link {
+  color: #1a1b22;
+}
+
+.navigation_type_saved-news .navigation__button {
+  border-color: #1a1b22;
+  color: #1a1b22;
+}
+
+.navigation_type_saved-news .navigation__link_active::after {
+  background-color: #1a1b22;
+}
+
+.navigation_type_saved-news .navigation__menu {
+  color: #1a1b22;
+}
+
 @media screen and (max-width: 768px) {
   .navigation {
-    padding: 20px 40px;
+    min-height: 66px;
+    padding: 0 40px;
   }
 
   .navigation__links {
     gap: 16px;
   }
+
+  .navigation__link {
+    min-height: 66px;
+    font-size: 16px;
+  }
+
+  .navigation__button {
+    min-height: 40px;
+    padding: 0 15px;
+    font-size: 16px;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .navigation {
-    padding: 16px;
+    min-height: 56px;
+    padding: 0 16px;
   }
 
-  .navigation__links {
-    display: none;
+  .navigation__logo {
+    position: relative;
+    z-index: 22;
+    font-size: 16px;
+    line-height: 24px;
   }
 
   .navigation__menu {
-    display: block;
-    background: none;
+    position: relative;
+    z-index: 22;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
     border: none;
-    color: white;
+    background-color: transparent;
+    color: #fff;
     font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .navigation__links {
+    position: absolute;
+    top: 56px;
+    right: 0;
+    left: 0;
+    z-index: 21;
+    display: none;
+    box-sizing: border-box;
+    height: auto;
+    padding: 16px 16px 24px;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #1a1b22;
+  }
+
+  .navigation__links_opened {
+    display: flex;
+  }
+
+  .navigation__link {
+    min-height: auto;
+    padding: 8px 0;
+    font-size: 18px;
+  }
+
+  .navigation__link::after {
+    display: none;
+  }
+
+  .navigation__button {
+    width: 100%;
+    min-height: 56px;
+    padding: 0 20px;
+  }
+
+  .navigation_type_saved-news .navigation__links {
+    background-color: #fff;
   }
 }

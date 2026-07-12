@@ -36,10 +36,12 @@ function NewsCard({
     if (isSaved) {
       const articleId = savedArticle?._id || article._id;
 
-      if (articleId) {
-        onDelete?.(articleId);
+      if (!articleId) {
+        console.error("Cannot delete article: missing article ID.");
+        return;
       }
 
+      onDelete?.(articleId);
       return;
     }
 
@@ -50,10 +52,11 @@ function NewsCard({
     <article className="card">
       <div className="card__image-container">
         {image ? (
-          <img src={image} alt={title} className="card__image" />
+          <img src={image} alt={title} className="card__image" loading="lazy" />
         ) : (
           <div
             className="card__image card__image_placeholder"
+            role="img"
             aria-label="Article image unavailable"
           />
         )}
@@ -64,7 +67,9 @@ function NewsCard({
 
         <div className="card__action-container">
           {!loggedIn && !isSavedPage && (
-            <span className="card__tooltip">Sign in to save articles</span>
+            <span className="card__tooltip" role="tooltip">
+              Sign in to save articles
+            </span>
           )}
 
           <button
@@ -84,6 +89,7 @@ function NewsCard({
                 className="card__action-icon"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
+                focusable="false"
               >
                 <path d="M8 8h8l-.7 11H8.7L8 8Zm2-3h4l1 1h4v2H5V6h4l1-1Z" />
               </svg>
@@ -92,6 +98,7 @@ function NewsCard({
                 className="card__action-icon"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
+                focusable="false"
               >
                 <path d="M6 3h12v18l-6-4-6 4V3Zm2 2v12.3l4-2.7 4 2.7V5H8Z" />
               </svg>

@@ -1,11 +1,12 @@
 .card {
   display: flex;
-  flex-direction: column;
   min-width: 0;
   min-height: 576px;
   overflow: hidden;
+  flex-direction: column;
   border-radius: 16px;
   background-color: #fff;
+  box-shadow: 0 2px 8px rgba(8, 29, 45, 0.08);
 }
 
 .card__image-container {
@@ -81,7 +82,8 @@
   fill: #2f71e5;
 }
 
-.card__action-button_delete .card__action-icon {
+/* Keep the trash icon gray even though saved-page cards are marked saved. */
+.card__action-button_saved.card__action-button_delete .card__action-icon {
   fill: #b6bcbf;
 }
 
@@ -95,7 +97,7 @@
 }
 
 .card__tooltip {
-  display: none;
+  position: relative;
   padding: 8px 12px;
   border-radius: 10px;
   background-color: #fff;
@@ -105,18 +107,26 @@
   font-weight: 500;
   line-height: 16px;
   white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
 }
 
-.card__action-container:hover .card__tooltip {
-  display: block;
+.card__action-container:hover .card__tooltip,
+.card__action-container:focus-within .card__tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 .card__content {
   display: flex;
-  flex: 1;
-  flex-direction: column;
   box-sizing: border-box;
+  flex: 1;
   padding: 20px 24px 24px;
+  flex-direction: column;
 }
 
 .card__date {
@@ -147,6 +157,11 @@
 
 .card__title-link:hover {
   text-decoration: underline;
+}
+
+.card__title-link:focus-visible {
+  outline: 2px solid #2f71e5;
+  outline-offset: 2px;
 }
 
 .card__text {
@@ -181,7 +196,7 @@
   }
 
   .card__image-container {
-    height: 150px;
+    height: 196px;
   }
 
   .card__content {
@@ -232,5 +247,12 @@
   .card__title {
     font-size: 22px;
     line-height: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__action-icon,
+  .card__tooltip {
+    transition: none;
   }
 }

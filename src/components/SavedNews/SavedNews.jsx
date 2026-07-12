@@ -3,10 +3,12 @@ import { useContext } from "react";
 import Navigation from "../../components/Navigation/Navigation";
 import SavedNewsHeader from "../../components/SavedNewsHeader/SavedNewsHeader";
 import NewsCardList from "../../components/NewsCardList/NewsCardList";
+import Footer from "../../components/Footer/Footer";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import mainApi from "../../utils/MainApi";
+import "./SavedNews.css";
 
-function SavedNews({ savedArticles, setSavedArticles, onLogout }) {
+function SavedNews({ savedArticles = [], setSavedArticles, onLogout }) {
   const currentUser = useContext(CurrentUserContext);
 
   const handleDeleteArticle = (articleId) => {
@@ -29,9 +31,9 @@ function SavedNews({ savedArticles, setSavedArticles, onLogout }) {
   };
 
   return (
-    <>
-      <header className="saved-news-page">
-        <Navigation loggedIn={true} onLogout={onLogout} isSavedNews />
+    <div className="saved-news-page">
+      <header className="saved-news-page__header">
+        <Navigation loggedIn onLogout={onLogout} isSavedNews />
 
         <SavedNewsHeader
           currentUser={currentUser}
@@ -39,14 +41,28 @@ function SavedNews({ savedArticles, setSavedArticles, onLogout }) {
         />
       </header>
 
-      <NewsCardList
-        articles={savedArticles}
-        savedArticles={savedArticles}
-        onDelete={handleDeleteArticle}
-        isSavedPage
-        loggedIn
-      />
-    </>
+      <main className="saved-news-page__main">
+        {savedArticles.length > 0 ? (
+          <NewsCardList
+            articles={savedArticles}
+            savedArticles={savedArticles}
+            onDelete={handleDeleteArticle}
+            isSavedPage
+            loggedIn
+          />
+        ) : (
+          <section className="saved-news-page__empty" aria-live="polite">
+            <h2 className="saved-news-page__empty-title">No saved articles</h2>
+
+            <p className="saved-news-page__empty-text">
+              Your saved articles will appear here.
+            </p>
+          </section>
+        )}
+      </main>
+
+      <Footer />
+    </div>
   );
 }
 

@@ -10,6 +10,7 @@ function Main({
   hasSearched,
   error,
   onSaveArticle,
+  onDeleteArticle,
   savedArticles,
   loggedIn,
   onLoginClick,

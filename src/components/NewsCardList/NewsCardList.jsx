@@ -10,8 +10,9 @@ function NewsCardList({
   onSave,
   onDelete,
   savedArticles = [],
-  loggedIn,
+  loggedIn = false,
   onLoginClick,
+  isSavedPage = false,
 }) {
   const [visibleArticleCount, setVisibleArticleCount] = useState(
     INITIAL_ARTICLE_COUNT,
@@ -28,12 +29,15 @@ function NewsCardList({
   const visibleArticles = articles.slice(0, visibleArticleCount);
   const hasMoreArticles = visibleArticleCount < articles.length;
 
+  const sectionLabel = isSavedPage ? "Saved articles" : "Search results";
+
   return (
-    <section className="results" aria-labelledby="search-results-title">
+    <section
+      className={`results ${isSavedPage ? "results_type_saved-news" : ""}`}
+      aria-label={sectionLabel}
+    >
       <div className="results__container">
-        <h2 className="results__title" id="search-results-title">
-          Search results
-        </h2>
+        {!isSavedPage && <h2 className="results__title">Search results</h2>}
 
         <div className="results__grid">
           {visibleArticles.map((article) => {
@@ -45,14 +49,15 @@ function NewsCardList({
 
             return (
               <NewsCard
-                key={articleUrl}
+                key={articleUrl || article._id}
                 article={article}
                 savedArticle={savedArticle}
-                isSaved={Boolean(savedArticle)}
+                isSaved={isSavedPage || Boolean(savedArticle)}
                 loggedIn={loggedIn}
                 onSave={onSave}
                 onDelete={onDelete}
                 onLoginClick={onLoginClick}
+                isSavedPage={isSavedPage}
               />
             );
           })}
