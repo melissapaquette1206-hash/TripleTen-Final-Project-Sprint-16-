@@ -7,20 +7,27 @@ function SearchForm({ onSearch }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onSearch(keyword);
+    const trimmedKeyword = keyword.trim();
+
+    if (!trimmedKeyword) return;
+
+    onSearch(trimmedKeyword);
   };
 
   return (
     <form className="search-form" onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Enter topic"
         className="search-form__input"
+        placeholder="Enter topic"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
         required
+        minLength={2}
+        autoComplete="off"
+        aria-label="Search news"
       />
-      ```
+
       <button type="submit" className="search-form__button">
         Search
       </button>

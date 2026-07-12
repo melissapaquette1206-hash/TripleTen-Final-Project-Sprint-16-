@@ -1,11 +1,19 @@
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = import.meta.env.VITE_MAIN_API_URL || "http://localhost:3001";
 
 const checkResponse = (res) => {
-  if (!res.ok) {
-    return Promise.reject(`Error: ${res.status}`);
+  if (res.ok) {
+    return res.json();
   }
 
-  return res.json();
+  return res
+    .json()
+    .catch(() => ({}))
+    .then((errorData) => {
+      const message =
+        errorData.message || `Request failed with status ${res.status}`;
+
+      return Promise.reject(new Error(message));
+    });
 };
 
 export const register = ({ name, email, password }) => {
@@ -15,8 +23,8 @@ export const register = ({ name, email, password }) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      name,
-      email,
+      name: name.trim(),
+      email: email.trim(),
       password,
     }),
   }).then(checkResponse);
@@ -29,16 +37,21 @@ export const authorize = ({ email, password }) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email,
+      email: email.trim(),
       password,
     }),
   }).then(checkResponse);
 };
 
 export const getUserInfo = (token) => {
+  if (!token) {
+    return Promise.reject(new Error("Authentication token is missing."));
+  }
+
   return fetch(`${BASE_URL}/users/me`, {
+    method: "GET",
     headers: {
-      authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   }).then(checkResponse);
 };

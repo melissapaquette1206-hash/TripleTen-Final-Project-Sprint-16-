@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import Header from "../../components/Header/Header";
-import NewsCardList from "../../components/NewsCardList/NewsCardList";
-import About from "../../components/About/About";
-import Preloader from "../../components/Preloader/Preloader";
-import NoResults from "../../components/NoResults/NoResults";
+import Main from "../../components/Main/Main";
 import newsApi from "../../utils/NewsApi";
 import mainApi from "../../utils/MainApi";
 
@@ -19,31 +17,55 @@ function Home({
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState("");
 
-  // Restore previous search results
   useEffect(() => {
-    const savedResults = localStorage.getItem("searchResults");
+    try {
+      const storedResults = localStorage.getItem("searchResults");
 
-    if (savedResults) {
-      setArticles(JSON.parse(savedResults));
-      setHasSearched(true);
+      if (!storedResults) {
+        return;
+      }
+
+      const parsedResults = JSON.parse(storedResults);
+
+      if (Array.isArray(parsedResults)) {
+        setArticles(parsedResults);
+        setHasSearched(true);
+      }
+    } catch (err) {
+      console.error("Could not restore previous search results:", err);
+      localStorage.removeItem("searchResults");
+      localStorage.removeItem("keyword");
     }
   }, []);
 
   const handleSearch = (keyword) => {
+    const trimmedKeyword = keyword.trim();
+
+    if (!trimmedKeyword) {
+      return;
+    }
+
     setIsLoading(true);
     setHasSearched(true);
     setError("");
+    setArticles([]);
 
     newsApi
-      .searchNews(keyword)
+      .searchNews(trimmedKeyword)
       .then((data) => {
-        setArticles(data.articles);
+        const receivedArticles = Array.isArray(data?.articles)
+          ? data.articles
+          : [];
 
-        localStorage.setItem("searchResults", JSON.stringify(data.articles));
+        setArticles(receivedArticles);
 
-        localStorage.setItem("keyword", keyword);
+        localStorage.setItem("searchResults", JSON.stringify(receivedArticles));
+        localStorage.setItem("keyword", trimmedKeyword);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("News search failed:", err);
+
+        setArticles([]);
         setError(
           "Sorry, something went wrong during the request. Please try again later.",
         );
@@ -54,14 +76,75 @@ function Home({
   };
 
   const handleSaveArticle = (article) => {
+    if (!loggedIn) {
+      onLoginClick();
+      return;
+    }
+
     const token = localStorage.getItem("jwt");
 
+    if (!token) {
+      onLoginClick();
+      return;
+    }
+
+    const articleUrl = article.url || article.link;
+
+    const alreadySaved = savedArticles.some(
+      (savedArticle) => (savedArticle.link || savedArticle.url) === articleUrl,
+    );
+
+    if (alreadySaved) {
+      return;
+    }
+
+    const keyword = localStorage.getItem("keyword") || "";
+
+    const articleToSave = {
+      keyword,
+      title: article.title,
+      text: article.description || article.text || "",
+      date: article.publishedAt || article.date,
+      source:
+        typeof article.source === "object"
+          ? article.source?.name
+          : article.source,
+      link: articleUrl,
+      image: article.urlToImage || article.image,
+    };
+
     mainApi
-      .saveArticle(article, token)
+      .saveArticle(articleToSave, token)
       .then((savedArticle) => {
-        setSavedArticles((prev) => [...prev, savedArticle]);
+        setSavedArticles((currentArticles) => [
+          ...currentArticles,
+          savedArticle,
+        ]);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error("Could not save article:", err);
+      });
+  };
+
+  const handleDeleteArticle = (articleId) => {
+    const token = localStorage.getItem("jwt");
+
+    if (!token || !articleId) {
+      return;
+    }
+
+    mainApi
+      .deleteArticle(articleId, token)
+      .then(() => {
+        setSavedArticles((currentArticles) =>
+          currentArticles.filter(
+            (savedArticle) => savedArticle._id !== articleId,
+          ),
+        );
+      })
+      .catch((err) => {
+        console.error("Could not delete article:", err);
+      });
   };
 
   return (
@@ -73,29 +156,17 @@ function Home({
         onSearch={handleSearch}
       />
 
-      <main>
-        {isLoading && <Preloader />}
-
-        {error && (
-          <section className="search-error">
-            <p>{error}</p>
-          </section>
-        )}
-
-        {!isLoading && hasSearched && !error && articles.length === 0 && (
-          <NoResults />
-        )}
-
-        {articles.length > 0 && (
-          <NewsCardList
-            articles={articles}
-            onSave={handleSaveArticle}
-            savedArticles={savedArticles}
-          />
-        )}
-
-        <About />
-      </main>
+      <Main
+        articles={articles}
+        isLoading={isLoading}
+        hasSearched={hasSearched}
+        error={error}
+        onSaveArticle={handleSaveArticle}
+        onDeleteArticle={handleDeleteArticle}
+        savedArticles={savedArticles}
+        loggedIn={loggedIn}
+        onLoginClick={onLoginClick}
+      />
     </>
   );
 }

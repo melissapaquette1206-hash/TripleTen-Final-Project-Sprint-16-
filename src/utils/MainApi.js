@@ -5,30 +5,42 @@ class MainApi {
 
   _checkResponse(res) {
     if (!res.ok) {
-      return Promise.reject(`Error: ${res.status}`);
+      return res
+        .json()
+        .catch(() => ({}))
+        .then((errorData) => {
+          const message =
+            errorData.message || `Request failed with status ${res.status}`;
+
+          return Promise.reject(new Error(message));
+        });
     }
 
-    ```
-return res.json();
-```;
+    if (res.status === 204) {
+      return Promise.resolve(null);
+    }
+
+    return res.json();
   }
 
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse);
+  _request(url, options = {}) {
+    return fetch(url, options).then((res) => this._checkResponse(res));
   }
 
   getUserInfo(token) {
     return this._request(`${this._baseUrl}/users/me`, {
+      method: "GET",
       headers: {
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   }
 
   getSavedArticles(token) {
     return this._request(`${this._baseUrl}/articles`, {
+      method: "GET",
       headers: {
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   }
@@ -37,25 +49,25 @@ return res.json();
     return this._request(`${this._baseUrl}/articles`, {
       method: "POST",
       headers: {
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(article),
     });
   }
 
-  deleteArticle(id, token) {
-    return this._request(`${this._baseUrl}/articles/${id}`, {
+  deleteArticle(articleId, token) {
+    return this._request(`${this._baseUrl}/articles/${articleId}`, {
       method: "DELETE",
       headers: {
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   }
 }
 
 const mainApi = new MainApi({
-  baseUrl: "http://localhost:3001",
+  baseUrl: import.meta.env.VITE_MAIN_API_URL || "http://localhost:3001",
 });
 
 export default mainApi;

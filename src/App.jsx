@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Home from "./pages/Home/Home";
 import SavedNews from "./pages/SavedNews/SavedNews";
@@ -14,75 +14,107 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [savedArticles, setSavedArticles] = useState([]);
+
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const openLogin = () => setIsLoginOpen(true);
-  const closeLogin = () => setIsLoginOpen(false);
-  const openRegister = () => setIsRegisterOpen(true);
-  const closeRegister = () => setIsRegisterOpen(false);
+
+  const openLogin = () => {
+    setIsLoginOpen(true);
+    setIsRegisterOpen(false);
+  };
+
+  const closeLogin = () => {
+    setIsLoginOpen(false);
+  };
+
+  const openRegister = () => {
+    setIsRegisterOpen(true);
+    setIsLoginOpen(false);
+  };
+
+  const closeRegister = () => {
+    setIsRegisterOpen(false);
+  };
 
   const handleLogin = ({ email, password }) => {
-    auth
-      .authorize({
-        email,
-        password,
+    return auth
+      .authorize({ email, password })
+      .then(({ token }) => {
+        localStorage.setItem("jwt", token);
+
+        return auth.getUserInfo(token);
       })
-      .then((data) => {
-        localStorage.setItem("jwt", data.token);
+      .then((user) => {
+        setCurrentUser(user);
         setLoggedIn(true);
-        return auth.getUserInfo(data.token);
+
+        const token = localStorage.getItem("jwt");
+
+        return mainApi.getSavedArticles(token);
       })
-      .then(setCurrentUser)
-      .catch(console.error);
-    closeLogin();
+      .then((articles) => {
+        setSavedArticles(Array.isArray(articles) ? articles : []);
+        closeLogin();
+      })
+      .catch((err) => {
+        console.error("Login failed:", err);
+        throw err;
+      });
   };
 
   const handleRegister = (userData) => {
-    auth
+    return auth
       .register(userData)
       .then(() => {
         closeRegister();
         openLogin();
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error("Registration failed:", err);
+        throw err;
+      });
   };
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
     setLoggedIn(false);
     setCurrentUser({});
+    setSavedArticles([]);
   };
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
+
     if (!token) {
       return;
     }
 
-    auth
-      .getUserInfo(token)
-      .then((user) => {
+    Promise.all([auth.getUserInfo(token), mainApi.getSavedArticles(token)])
+      .then(([user, articles]) => {
         setCurrentUser(user);
-        closeLogin();
-        return mainApi.getSavedArticles(token);
-      })
-      .then((articles) => {
-        setSavedArticles(articles);
+        setSavedArticles(Array.isArray(articles) ? articles : []);
         setLoggedIn(true);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error("Session restoration failed:", err);
+
+        localStorage.removeItem("jwt");
+        setLoggedIn(false);
+        setCurrentUser({});
+        setSavedArticles([]);
+      });
   }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      {" "}
       <Routes>
         <Route
           path="/"
           element={
             <Home
               loggedIn={loggedIn}
-              setLoggedIn={setLoggedIn}
+              onLoginClick={openLogin}
+              onLogout={handleLogout}
               savedArticles={savedArticles}
               setSavedArticles={setSavedArticles}
             />
@@ -93,24 +125,28 @@ function App() {
           path="/saved-news"
           element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <SavedNews savedArticles={savedArticles} />
+              <SavedNews
+                savedArticles={savedArticles}
+                setSavedArticles={setSavedArticles}
+                onLogout={handleLogout}
+              />
             </ProtectedRoute>
           }
         />
       </Routes>
+
       <LoginModal
         isOpen={isLoginOpen}
         onClose={closeLogin}
         onLogin={handleLogin}
-        onRegisterClick={() => {
-          closeLogin();
-          openRegister();
-        }}
+        onRegisterClick={openRegister}
       />
+
       <RegisterModal
         isOpen={isRegisterOpen}
         onClose={closeRegister}
         onRegister={handleRegister}
+        onLoginClick={openLogin}
       />
     </CurrentUserContext.Provider>
   );

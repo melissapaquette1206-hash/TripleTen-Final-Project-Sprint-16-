@@ -3,13 +3,13 @@ import { useState } from "react";
 export function useForm(initialValues = {}) {
   const [values, setValues] = useState(initialValues);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setValues({
-      ...values,
+    setValues((currentValues) => ({
+      ...currentValues,
       [name]: value,
-    });
+    }));
   };
 
   const resetForm = () => {

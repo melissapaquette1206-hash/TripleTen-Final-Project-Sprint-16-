@@ -1,0 +1,45 @@
+.register-modal__label {
+  margin: 0 0 8px;
+  color: #2f71e5;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.register-modal__input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 0 8px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  background-color: transparent;
+  color: #1a1b22;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 17px;
+  outline: none;
+}
+
+.register-modal__input::placeholder {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.register-modal__input:focus {
+  border-bottom-color: #2f71e5;
+}
+
+.register-modal__input_type_error {
+  border-bottom-color: #ff0000;
+}
+
+.register-modal__error {
+  min-height: 15px;
+  margin: 3px 0 13px;
+  color: #ff0000;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 15px;
+}

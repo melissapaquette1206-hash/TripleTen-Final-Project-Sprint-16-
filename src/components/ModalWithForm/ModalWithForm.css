@@ -1,66 +1,195 @@
 .modal {
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.3s ease;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  visibility: hidden;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 90px 16px 40px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    visibility 0s linear 0.3s,
+    opacity 0.3s ease;
 }
 
 .modal_opened {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .modal__container {
-  width: 430px;
-  background: white;
-  margin: 120px auto;
-  border-radius: 16px;
-  padding: 34px 36px;
   position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 430px;
+  padding: 34px 36px 28px;
+  border-radius: 16px;
+  background-color: #fff;
 }
 
 .modal__close {
   position: absolute;
-  top: -40px;
-  right: -40px;
-  background: transparent;
+  top: -46px;
+  right: -46px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: none;
-  color: white;
-  font-size: 40px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.modal__close::before,
+.modal__close::after {
+  position: absolute;
+  top: 19px;
+  left: 3px;
+  width: 34px;
+  height: 3px;
+  background-color: #fff;
+  content: "";
+}
+
+.modal__close::before {
+  transform: rotate(45deg);
+}
+
+.modal__close::after {
+  transform: rotate(-45deg);
+}
+
+.modal__close:hover {
+  opacity: 0.7;
+}
+
+.modal__close:focus-visible {
+  outline: 2px solid #2f71e5;
+  outline-offset: 3px;
+}
+
+.modal__title {
+  margin: 0 0 22px;
+  color: #1a1b22;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 28px;
 }
 
 .modal__form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .modal__submit {
-  height: 64px;
+  width: 100%;
+  min-height: 64px;
+  margin-top: 8px;
+  padding: 0 24px;
   border: none;
   border-radius: 100px;
-  background: #2f71e5;
-  color: white;
+  background-color: #2f71e5;
+  color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
-@media screen and (max-width: 768px) {
-  .modal__container {
-    width: 430px;
+.modal__submit:hover:not(:disabled) {
+  background-color: #347eff;
+}
+
+.modal__submit:active:not(:disabled) {
+  background-color: #2a65cc;
+}
+
+.modal__submit:disabled {
+  background-color: #e6e8eb;
+  color: #b6bcbf;
+  cursor: not-allowed;
+}
+
+.modal__submit:focus-visible {
+  outline: 2px solid #2f71e5;
+  outline-offset: 3px;
+}
+
+.modal__server-error {
+  margin: 0 0 8px;
+  color: #ff0000;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+}
+
+.modal__secondary {
+  margin: 16px 0 0;
+  color: #1a1b22;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+}
+
+.modal__secondary-button {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #2f71e5;
+  font: inherit;
+  cursor: pointer;
+}
+
+.modal__secondary-button:hover {
+  opacity: 0.7;
+}
+
+.modal__secondary-button:focus-visible {
+  outline: 2px solid #2f71e5;
+  outline-offset: 2px;
+}
+
+@media screen and (max-width: 520px) {
+  .modal {
+    align-items: flex-start;
+    padding: 56px 0 0;
   }
-}
 
-@media screen and (max-width: 480px) {
   .modal__container {
-    width: calc(100% - 32px);
-    padding: 24px;
-    margin: 80px auto;
+    min-height: calc(100vh - 56px);
+    padding: 24px 16px;
+    border-radius: 16px 16px 0 0;
   }
 
   .modal__close {
-    right: 10px;
-    top: 10px;
-    color: #1a1b22;
+    top: -44px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .modal__close::before,
+  .modal__close::after {
+    top: 15px;
+    left: 2px;
+    width: 28px;
+    height: 2px;
+  }
+
+  .modal__title {
+    margin-bottom: 22px;
   }
 }

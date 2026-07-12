@@ -1,34 +1,33 @@
 .header {
-  min-height: 576px;
-  background-image: url("../../images/header-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  color: #fff;
   width: 100%;
   min-height: 576px;
-  background-size: cover;
-  background-position: center;
+  color: #fff;
+  background: url("../../images/background.svg") center / cover no-repeat;
 }
 
 .header__overlay {
-  background: rgba(0, 0, 0, 0.4);
-  min-height: 576px;
+  min-height: inherit;
+  background: rgba(26, 27, 34, 0.5);
 }
 
 .header__content {
   max-width: 608px;
   margin: 80px auto 0;
   padding: 0 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .header__title {
+  margin: 0;
   font-family: "Roboto Slab", serif;
   font-size: 60px;
+  font-weight: 400;
   line-height: 64px;
-  margin: 0;
 }
 
 .header__subtitle {
+  max-width: 545px;
   margin-top: 32px;
   font-size: 18px;
   line-height: 24px;
@@ -41,17 +40,12 @@
 
   .header__content {
     max-width: 452px;
-    margin: 40px auto;
+    margin: 40px auto 0;
   }
 
   .header__title {
     font-size: 36px;
     line-height: 40px;
-  }
-
-  .header__subtitle {
-    font-size: 18px;
-    line-height: 24px;
   }
 }
 
@@ -61,13 +55,8 @@
   }
 
   .header__content {
-    padding: 16px;
     margin-top: 30px;
-  }
-
-  .header__title {
-    font-size: 36px;
-    line-height: 40px;
+    padding: 16px;
   }
 
   .header__subtitle {

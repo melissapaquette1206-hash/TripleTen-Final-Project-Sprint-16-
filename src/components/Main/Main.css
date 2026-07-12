@@ -1,0 +1,38 @@
+.main {
+  width: 100%;
+}
+
+.main__status {
+  box-sizing: border-box;
+  min-height: 282px;
+  padding: 80px 16px;
+  background-color: #f5f6f7;
+  text-align: center;
+}
+
+.main__error {
+  max-width: 500px;
+  margin: 0 auto;
+  color: #1a1b22;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+@media screen and (max-width: 768px) {
+  .main__status {
+    min-height: 200px;
+    padding: 40px 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main__status {
+    padding: 32px 16px;
+  }
+
+  .main__error {
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
