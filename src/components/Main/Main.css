@@ -1,0 +1,20 @@
+.main {
+  width: 100%;
+}
+
+.main__error {
+  display: flex;
+  min-height: 282px;
+  padding: 80px 16px;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f6f7;
+  text-align: center;
+}
+
+.main__error-text {
+  max-width: 500px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 24px;
+}

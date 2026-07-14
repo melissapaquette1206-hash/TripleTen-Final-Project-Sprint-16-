@@ -1,0 +1,131 @@
+.search-form {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 64px;
+  margin-top: 64px;
+}
+
+.search-form__field {
+  width: 100%;
+}
+
+.search-form__input {
+  width: 100%;
+  height: 64px;
+  padding: 0 190px 0 24px;
+  border: 1px solid #d1d2d6;
+  border-radius: 100px;
+  background-color: #fff;
+  color: #1a1b22;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 22px;
+  outline: none;
+}
+
+.search-form__input::placeholder {
+  color: #b6bcbf;
+}
+
+.search-form__input:focus {
+  border-color: #2f71e5;
+}
+
+.search-form__input_type_error {
+  border-color: #ff0000;
+}
+
+.search-form__button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 168px;
+  height: 64px;
+  padding: 0;
+  border: 0;
+  border-radius: 100px;
+  background-color: #2f71e5;
+  color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-form__button:hover {
+  background-color: #347eff;
+}
+
+.search-form__button:active {
+  background-color: #2a65cc;
+}
+
+.search-form__button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.search-form__error {
+  position: absolute;
+  top: 70px;
+  left: 24px;
+  color: #ff0000;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+@media screen and (max-width: 768px) {
+  .search-form {
+    height: 56px;
+    margin-top: 48px;
+  }
+
+  .search-form__input,
+  .search-form__button {
+    height: 56px;
+  }
+
+  .search-form__button {
+    width: 160px;
+  }
+
+  .search-form__input {
+    padding-right: 180px;
+  }
+
+  .search-form__error {
+    top: 61px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .search-form {
+    display: grid;
+    height: auto;
+    margin-top: 122px;
+    gap: 16px;
+  }
+
+  .search-form__field,
+  .search-form__input,
+  .search-form__button {
+    width: 100%;
+  }
+
+  .search-form__input {
+    padding: 0 16px;
+  }
+
+  .search-form__button {
+    position: static;
+  }
+
+  .search-form__error {
+    top: 59px;
+    left: 16px;
+  }
+}

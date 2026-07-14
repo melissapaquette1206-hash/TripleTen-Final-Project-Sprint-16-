@@ -1,0 +1,17 @@
+@import "./vendor/normalize.css";
+@import "./vendor/fonts.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.page {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: #1a1b22;
+  background-color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
+}
