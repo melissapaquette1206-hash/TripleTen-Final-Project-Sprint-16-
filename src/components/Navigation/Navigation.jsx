@@ -1,19 +1,42 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import logoutHomeIcon from "../../images/logout-home.svg";
 import logoutProfileIcon from "../../images/logout-profile.svg";
-import menuHomeIcon from "../../images/mobile-menu-page.svg";
-import menuProfileIcon from "../../images/mobile-menu-profile.svg";
-import closeIcon from "../../images/close-icon.svg";
 import "./Navigation.css";
 
 function Navigation({ loggedIn, onLoginClick, onLogout, isSavedNews = false }) {
   const currentUser = useContext(CurrentUserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigationRef = useRef(null);
 
   const closeMenu = () => setIsMenuOpen(false);
+
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") closeMenu();
+    };
+
+    const handleOutsideClick = (event) => {
+      if (
+        navigationRef.current &&
+        !navigationRef.current.contains(event.target)
+      ) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isMenuOpen]);
 
   const getLinkClassName = ({ isActive }) =>
     `navigation__link${isActive ? " navigation__link_active" : ""}`;
@@ -28,14 +51,9 @@ function Navigation({ loggedIn, onLoginClick, onLogout, isSavedNews = false }) {
     onLogout?.();
   };
 
-  const menuIcon = isMenuOpen
-    ? closeIcon
-    : isSavedNews
-      ? menuProfileIcon
-      : menuHomeIcon;
-
   return (
     <nav
+      ref={navigationRef}
       className={`navigation${
         isSavedNews ? " navigation_type_saved-news" : ""
       }${isMenuOpen ? " navigation_menu-opened" : ""}`}
@@ -44,6 +62,22 @@ function Navigation({ loggedIn, onLoginClick, onLogout, isSavedNews = false }) {
       <NavLink to="/" className="navigation__logo" onClick={closeMenu}>
         NewsExplorer
       </NavLink>
+
+      <button
+        className={`navigation__menu-button${
+          isMenuOpen ? " navigation__menu-button_opened" : ""
+        }`}
+        type="button"
+        aria-label={
+          isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+        }
+        aria-expanded={isMenuOpen}
+        aria-controls="navigation-links"
+        onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+      >
+        <span className="navigation__menu-line" aria-hidden="true" />
+        <span className="navigation__menu-line" aria-hidden="true" />
+      </button>
 
       <div
         id="navigation-links"
@@ -54,6 +88,7 @@ function Navigation({ loggedIn, onLoginClick, onLogout, isSavedNews = false }) {
         <NavLink to="/" className={getLinkClassName} onClick={closeMenu}>
           Home
         </NavLink>
+
         {loggedIn && (
           <NavLink
             to="/saved-news"
@@ -63,6 +98,7 @@ function Navigation({ loggedIn, onLoginClick, onLogout, isSavedNews = false }) {
             Saved articles
           </NavLink>
         )}
+
         {loggedIn ? (
           <button
             type="button"
@@ -75,7 +111,7 @@ function Navigation({ loggedIn, onLoginClick, onLogout, isSavedNews = false }) {
             <img
               className="navigation__logout-icon"
               src={isSavedNews ? logoutProfileIcon : logoutHomeIcon}
-              alt="Log out"
+              alt="Log out of NewsExplorer"
             />
           </button>
         ) : (
@@ -88,23 +124,6 @@ function Navigation({ loggedIn, onLoginClick, onLogout, isSavedNews = false }) {
           </button>
         )}
       </div>
-
-      <button
-        className="navigation__menu-button"
-        type="button"
-        aria-label={
-          isMenuOpen ? "Close navigation menu" : "Open navigation menu"
-        }
-        aria-expanded={isMenuOpen}
-        aria-controls="navigation-links"
-        onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-      >
-        <img
-          className="navigation__menu-icon"
-          src={menuIcon}
-          alt={isMenuOpen ? "Close menu" : "Open menu"}
-        />
-      </button>
     </nav>
   );
 }

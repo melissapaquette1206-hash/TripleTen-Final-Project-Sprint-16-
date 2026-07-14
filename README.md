@@ -74,8 +74,6 @@ npm run build
 npm run deploy
 ```
 
-Deployed application: https://melissapaquette1206-hash.github.io/TripleTen-Final-Project-Sprint-16-/
-
 ## Stage 1 authentication note
 
 Authentication and saved articles are intentionally simulated in the browser for Stage 1. A production application would use a secure backend, hashed passwords, a database, and server-issued JWTs.
