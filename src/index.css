@@ -1,4 +1,5 @@
 @import "./vendor/normalize.css";
+@import "./vendor/fonts.css";
 
 *,
 *::before,
@@ -6,41 +7,11 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  font-family: "Roboto", Arial, sans-serif;
-  color: #1a1b22;
-  background-color: #ffffff;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  text-decoration: none;
-}
-
 .page {
-  width: 100%;
+  min-width: 320px;
   min-height: 100vh;
-  overflow-x: hidden;
-}
-
-@media screen and (max-width: 768px) {
-  body {
-    font-size: 16px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  body {
-    min-width: 320px;
-  }
+  margin: 0;
+  color: #1a1b22;
+  background-color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
 }

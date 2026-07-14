@@ -15,33 +15,21 @@ function Main({
   loggedIn,
   onLoginClick,
 }) {
-  const hasResults =
-    !isLoading &&
-    !error &&
-    hasSearched &&
-    Array.isArray(articles) &&
-    articles.length > 0;
-
+  const showResults =
+    !isLoading && !error && hasSearched && articles.length > 0;
   const showNoResults =
-    !isLoading &&
-    !error &&
-    hasSearched &&
-    Array.isArray(articles) &&
-    articles.length === 0;
+    !isLoading && !error && hasSearched && articles.length === 0;
 
   return (
     <main className="main">
       {isLoading && <Preloader />}
-
       {!isLoading && error && (
-        <section className="main__status" aria-live="polite">
-          <p className="main__error">{error}</p>
+        <section className="main__error" aria-live="polite">
+          <p className="main__error-text">{error}</p>
         </section>
       )}
-
       {showNoResults && <NoResults />}
-
-      {hasResults && (
+      {showResults && (
         <NewsCardList
           articles={articles}
           onSave={onSaveArticle}
@@ -51,7 +39,6 @@ function Main({
           onLoginClick={onLoginClick}
         />
       )}
-
       <About />
     </main>
   );

@@ -1,3 +1,6 @@
+import bookmarkInactive from "../../images/bookmarkInactive.svg";
+import bookmarkActive from "../../images/bookmarkBlue.svg";
+import trashIcon from "../../images/trash-logo.svg";
 import "./NewsCard.css";
 
 function NewsCard({
@@ -15,10 +18,8 @@ function NewsCard({
   const description = article.description || article.text || "";
   const source =
     typeof article.source === "object" ? article.source?.name : article.source;
-
   const articleUrl = article.url || article.link;
   const publishedDate = article.publishedAt || article.date;
-
   const formattedDate = publishedDate
     ? new Date(publishedDate).toLocaleDateString("en-US", {
         month: "long",
@@ -35,29 +36,34 @@ function NewsCard({
 
     if (isSaved) {
       const articleId = savedArticle?._id || article._id;
-
-      if (!articleId) {
-        console.error("Cannot delete article: missing article ID.");
-        return;
-      }
-
-      onDelete?.(articleId);
+      if (articleId) onDelete?.(articleId);
       return;
     }
 
     onSave?.(article);
   };
 
+  const actionIcon = isSavedPage
+    ? trashIcon
+    : isSaved
+      ? bookmarkActive
+      : bookmarkInactive;
+
   return (
     <article className="card">
       <div className="card__image-container">
         {image ? (
-          <img src={image} alt={title} className="card__image" loading="lazy" />
+          <img
+            src={image}
+            alt={`News article illustration: ${title}`}
+            className="card__image"
+            loading="lazy"
+          />
         ) : (
           <div
             className="card__image card__image_placeholder"
             role="img"
-            aria-label="Article image unavailable"
+            aria-label={`Image unavailable for ${title}`}
           />
         )}
 
@@ -71,11 +77,8 @@ function NewsCard({
               Sign in to save articles
             </span>
           )}
-
           <button
-            className={`card__action-button ${
-              isSaved ? "card__action-button_saved" : ""
-            } ${isSavedPage ? "card__action-button_delete" : ""}`}
+            className="card__action-button"
             type="button"
             aria-label={
               isSaved || isSavedPage
@@ -84,25 +87,11 @@ function NewsCard({
             }
             onClick={handleActionClick}
           >
-            {isSavedPage ? (
-              <svg
-                className="card__action-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path d="M8 8h8l-.7 11H8.7L8 8Zm2-3h4l1 1h4v2H5V6h4l1-1Z" />
-              </svg>
-            ) : (
-              <svg
-                className="card__action-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path d="M6 3h12v18l-6-4-6 4V3Zm2 2v12.3l4-2.7 4 2.7V5H8Z" />
-              </svg>
-            )}
+            <img
+              className="card__action-icon"
+              src={actionIcon}
+              alt={isSavedPage ? "Delete saved article" : "Save article"}
+            />
           </button>
         </div>
       </div>
@@ -111,7 +100,6 @@ function NewsCard({
         <time className="card__date" dateTime={publishedDate || undefined}>
           {formattedDate}
         </time>
-
         <h3 className="card__title">
           {articleUrl ? (
             <a
@@ -126,9 +114,7 @@ function NewsCard({
             title
           )}
         </h3>
-
         <p className="card__text">{description}</p>
-
         <p className="card__source">{source || "Unknown source"}</p>
       </div>
     </article>

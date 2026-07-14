@@ -18,31 +18,21 @@ function NewsCardList({
     INITIAL_ARTICLE_COUNT,
   );
 
-  useEffect(() => {
-    setVisibleArticleCount(INITIAL_ARTICLE_COUNT);
-  }, [articles]);
-
-  const handleShowMore = () => {
-    setVisibleArticleCount((currentCount) => currentCount + ARTICLES_PER_CLICK);
-  };
+  useEffect(() => setVisibleArticleCount(INITIAL_ARTICLE_COUNT), [articles]);
 
   const visibleArticles = articles.slice(0, visibleArticleCount);
   const hasMoreArticles = visibleArticleCount < articles.length;
 
-  const sectionLabel = isSavedPage ? "Saved articles" : "Search results";
-
   return (
     <section
-      className={`results ${isSavedPage ? "results_type_saved-news" : ""}`}
-      aria-label={sectionLabel}
+      className={`results${isSavedPage ? " results_type_saved-news" : ""}`}
+      aria-label={isSavedPage ? "Saved articles" : "Search results"}
     >
       <div className="results__container">
         {!isSavedPage && <h2 className="results__title">Search results</h2>}
-
         <div className="results__grid">
           {visibleArticles.map((article) => {
             const articleUrl = article.url || article.link;
-
             const savedArticle = savedArticles.find(
               (item) => (item.link || item.url) === articleUrl,
             );
@@ -62,12 +52,15 @@ function NewsCardList({
             );
           })}
         </div>
-
         {hasMoreArticles && (
           <button
             type="button"
             className="results__show-more"
-            onClick={handleShowMore}
+            onClick={() =>
+              setVisibleArticleCount(
+                (currentCount) => currentCount + ARTICLES_PER_CLICK,
+              )
+            }
           >
             Show more
           </button>
